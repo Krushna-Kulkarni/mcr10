@@ -5,6 +5,26 @@ export const InventoryContext = createContext();
 export const InventoryProvider = ({ children }) => {
   const allProducts = inventoryData;
 
+  const departments = allProducts?.reduce((acc, curr) => {
+    if (!acc.includes(curr.department)) {
+      acc.push(curr.department);
+    }
+    return acc;
+  }, []);
+
+  const { totalStock, totalDelivered, lowStockItems } = allProducts.reduce(
+    (acc, curr) => {
+      acc = {
+        ...acc,
+        totalStock: acc.totalStock + curr.stock,
+        totalDelivered: acc.totalDelivered + curr.delivered,
+        lowStockItems: acc.lowStockItems + (curr.stock <= 10 ? 1 : 0),
+      };
+      return acc;
+    },
+    { totalStock: 0, totalDelivered: 0, lowStockItems: 0 }
+  );
+
   console.log({ allProducts: allProducts });
 
   const [filters, setFilters] = useState({
@@ -66,6 +86,10 @@ export const InventoryProvider = ({ children }) => {
     <InventoryContext.Provider
       value={{
         products,
+        departments,
+        totalStock,
+        totalDelivered,
+        lowStockItems,
         stockFilterHandler,
         departmentFilterHandler,
         featureFilterHandler,

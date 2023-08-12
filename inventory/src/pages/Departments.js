@@ -3,14 +3,7 @@ import Sidebar from "../components/Sidebar";
 import { InventoryContext } from "../contexts/InventoryContext";
 
 export const Departments = () => {
-  const { products } = useContext(InventoryContext);
-
-  const departments = products.reduce((acc, curr) => {
-    if (!acc.includes(curr.department)) {
-      acc.push(curr.department);
-    }
-    return acc;
-  }, []);
+  const { departments } = useContext(InventoryContext);
 
   return (
     <div className="grid lg:grid-cols-[12rem_1fr]">

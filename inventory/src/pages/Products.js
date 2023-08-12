@@ -9,13 +9,8 @@ export const Products = () => {
     stockFilterHandler,
     departmentFilterHandler,
     featureFilterHandler,
+    departments,
   } = useContext(InventoryContext);
-  const departments = products?.reduce((acc, curr) => {
-    if (!acc.includes(curr.department)) {
-      acc.push(curr.department);
-    }
-    return acc;
-  }, []);
 
   return (
     <div className="grid lg:grid-cols-[12rem_1fr]">
