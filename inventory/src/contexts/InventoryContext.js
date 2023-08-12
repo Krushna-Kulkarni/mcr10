@@ -3,6 +3,7 @@ import { inventoryData } from "../backend/inventoryData";
 
 export const InventoryContext = createContext();
 export const InventoryProvider = ({ children }) => {
+  //   const [allProducts, setAllProducts] = useState();
   const allProducts = inventoryData;
 
   const departments = allProducts?.reduce((acc, curr) => {
@@ -12,7 +13,7 @@ export const InventoryProvider = ({ children }) => {
     return acc;
   }, []);
 
-  const { totalStock, totalDelivered, lowStockItems } = allProducts.reduce(
+  const { totalStock, totalDelivered, lowStockItems } = allProducts?.reduce(
     (acc, curr) => {
       acc = {
         ...acc,
@@ -25,12 +26,10 @@ export const InventoryProvider = ({ children }) => {
     { totalStock: 0, totalDelivered: 0, lowStockItems: 0 }
   );
 
-  console.log({ allProducts: allProducts });
-
   const [filters, setFilters] = useState({
     department: "",
     isLowStock: false,
-    feature: "Name",
+    feature: "",
   });
 
   const departmentFiltered =
@@ -38,29 +37,33 @@ export const InventoryProvider = ({ children }) => {
       ? allProducts
       : allProducts.filter((item) => item.department === filters.department);
 
-  console.log({ departmentfiltered: departmentFiltered });
-
   const stockFiltered = filters.isLowStock
     ? departmentFiltered.filter((item) => item.stock <= 10)
     : departmentFiltered;
 
-  console.log({ stockFiltered: stockFiltered });
+  let featureFiltered;
 
-  const featureFiltered =
-    filters.feature !== "" || filters.feature === "Name"
-      ? stockFiltered.sort(function (a, b) {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        })
-      : stockFiltered;
-
-  console.log({ featureFiltered: featureFiltered });
-
+  if (filters.feature === "") {
+    featureFiltered = stockFiltered.sort(function (a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+  } else {
+    featureFiltered = stockFiltered.sort(function (a, b) {
+      if (a[filters.feature] < b[filters.feature]) {
+        return -1;
+      }
+      if (a[filters.feature] > b[filters.feature]) {
+        return 1;
+      }
+      return 0;
+    });
+  }
   const products = featureFiltered;
 
   const departmentFilterHandler = (filterValue) => {
@@ -69,7 +72,7 @@ export const InventoryProvider = ({ children }) => {
       department: filterValue,
     });
   };
-  const stockFilterHandler = () => {
+  const stockFilterHandler = (e) => {
     setFilters({
       ...filters,
       isLowStock: !filters.isLowStock,

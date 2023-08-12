@@ -48,9 +48,9 @@ export const Products = () => {
               </li>
               <li className="p-4">
                 <select onChange={(e) => featureFilterHandler(e.target.value)}>
-                  <option value="Name">Name</option>
-                  <option value="Price">Price</option>
-                  <option value="Stock">Stock</option>
+                  <option value="name">Name</option>
+                  <option value="price">Price</option>
+                  <option value="stock">Stock</option>
                 </select>
               </li>
             </ul>
@@ -62,7 +62,7 @@ export const Products = () => {
           </div>
         </div>
         <div className="m-2">
-          <table className="bordersolid border-2 border-gray-700 w-[80rem]">
+          <table className="bordersolid border-2 border-gray-700 ">
             <thead>
               <tr className="bg-orange-200">
                 <th>Image</th>
